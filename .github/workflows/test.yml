@@ -44,7 +44,9 @@ jobs:
           exclude_inputs: bundle_id,display_name,isios15
 
       - name: Install Dependencies
-        run: brew install make ldid gnu-sed autoconf automake libtool pkg-config
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install make ldid gnu-sed autoconf automake libtool pkg-config
           
       - name: Install MEGA downloader
         if: ${{ startsWith(inputs.ipa_url, 'https://mega.nz/') }}
