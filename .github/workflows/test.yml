@@ -33,7 +33,7 @@ concurrency:
 jobs:
   build:
     name: Build YouMod IPA with FLEX
-    runs-on: macos-latest
+    runs-on: ubuntu-slim
     permissions:
       contents: write
 
@@ -42,6 +42,11 @@ jobs:
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
           exclude_inputs: bundle_id,display_name,isios15
+
+      - name: Install Dependencies
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          brew install make ldid gnu-sed autoconf automake libtool pkg-config
           
       - name: Install MEGA downloader
         if: ${{ startsWith(inputs.ipa_url, 'https://mega.nz/') }}
@@ -78,9 +83,6 @@ jobs:
         run: |
           unzip -q youtube.ipa -d ytextracted
           echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
-
-      - name: Install Dependencies
-        run: brew install make ldid gnu-sed autoconf automake libtool pkg-config
 
       - name: Set PATH Environment Variables
         run: |
