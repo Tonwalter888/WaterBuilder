@@ -33,7 +33,7 @@ concurrency:
 jobs:
   build:
     name: Build YouMod IPA with FLEX
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       contents: write
 
@@ -44,7 +44,9 @@ jobs:
           exclude_inputs: bundle_id,display_name,isios15
 
       - name: Install Dependencies
-        run: brew install make ldid gnu-sed autoconf automake libtool pkg-config
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          brew install make ldid gnu-sed autoconf automake libtool pkg-config
           
       - name: Install MEGA downloader
         if: ${{ startsWith(inputs.ipa_url, 'https://mega.nz/') }}
@@ -154,6 +156,7 @@ jobs:
 
       - name: Build Things
         run: |
+          rm -rf theos/sdks/iPhoneOS17.5.sdk theos/sdks/iPhoneOS18.6.sdk theos/sdks/iPhoneOS26.5.sdk 
           cd YouMod
           echo "YOUMOD_VERSION=$(grep '^Version:' control | cut -d ' ' -f2)" >> $GITHUB_ENV
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
