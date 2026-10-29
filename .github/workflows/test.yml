@@ -33,7 +33,7 @@ concurrency:
 jobs:
   build:
     name: Build YouMod IPA with FLEX
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     permissions:
       contents: write
 
@@ -163,7 +163,6 @@ jobs:
 
       - name: Build Things
         run: |
-          rm -rf theos/sdks/iPhoneOS26.5.sdk theos/sdks/iPhoneOS18.6.sdk
           cd YouMod
           echo "YOUMOD_VERSION=$(grep '^Version:' control | cut -d ' ' -f2)" >> $GITHUB_ENV
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
