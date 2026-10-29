@@ -33,7 +33,7 @@ concurrency:
 jobs:
   build:
     name: Build YouMod IPA with FLEX
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     permissions:
       contents: write
 
@@ -44,12 +44,7 @@ jobs:
           exclude_inputs: bundle_id,display_name,isios15
 
       - name: Install Dependencies
-        run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo >> /home/runner/.bashrc
-          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"' >> /home/runner/.bashrc
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
-          brew install make ldid gnu-sed autoconf automake libtool pkg-config
+        run: brew install make ldid gnu-sed autoconf automake libtool pkg-config
           
       - name: Install MEGA downloader
         if: ${{ startsWith(inputs.ipa_url, 'https://mega.nz/') }}
