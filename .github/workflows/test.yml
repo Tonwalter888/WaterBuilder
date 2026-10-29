@@ -46,6 +46,10 @@ jobs:
       - name: Install Dependencies
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo >> /home/runner/.bashrc
+          echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"' >> /home/runner/.bashrc
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
+          sudo apt-get install build-essential
           brew install make ldid gnu-sed autoconf automake libtool pkg-config
           
       - name: Install MEGA downloader
