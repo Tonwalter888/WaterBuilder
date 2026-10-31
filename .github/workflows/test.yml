@@ -107,10 +107,10 @@ jobs:
 
       - name: Setup Theos
         if: ${{ steps.cache-theos.outputs.cache-hit != 'true' }}
-        uses: Randomblock1/theos-action@main
+        uses: Randomblock1/theos-action@v1
         with:
           theos-src: 'https://github.com/roothide/theos'
-          theos-sdks: 'https://github.com/Tonwalter888/iOS-SDKs'
+          theos-sdks: 'https://github.com/theos/sdks'
             
       - name: Clone headers
         run: |
@@ -130,11 +130,8 @@ jobs:
             cd ${{ github.workspace }}
           fi
 
-      - name: Fix Theos od broken pipe issue
-        run: sed -i '' 's/od -c "$i" | head/od -c "$i" 2>\/dev\/null | head/g' $THEOS/bin/convert_xml_plist.sh || true
-
       - name: Install cyan
-        run: pipx install https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
 
       - name: Checkout YouMod
         uses: actions/checkout@v7
@@ -156,7 +153,6 @@ jobs:
 
       - name: Build Things
         run: |
-          rm -rf theos/sdks/iPhoneOS17.5.sdk theos/sdks/iPhoneOS18.6.sdk
           cd YouMod
           echo "YOUMOD_VERSION=$(grep '^Version:' control | cut -d ' ' -f2)" >> $GITHUB_ENV
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
