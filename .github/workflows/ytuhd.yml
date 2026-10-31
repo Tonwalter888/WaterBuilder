@@ -1,4 +1,4 @@
-name: Build IPA with YTM
+name: YTM (Comming soon, Maybe)
 on:
   workflow_dispatch:
     inputs:

@@ -8,14 +8,24 @@ on:
         required: true
         type: string
 
+      repo:
+        description: 'Repository to build from'
+        required: true
+        default: 'Tonwalter888/YouMod'
+
+      branch:
+        description: 'Branch to build from'
+        required: true
+        default: 'pre-release'
+
       display_name:
-        description: "App Name (Optional)"
+        description: "App Name"
         default: "WaterDev"
         required: true
         type: string
 
       bundle_id:
-        description: "Bundle ID (Optional)"
+        description: "Bundle ID"
         default: "com.waterdev.youtube"
         required: true
         type: string
@@ -41,7 +51,7 @@ jobs:
       - name: Hide Sensitive Inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: bundle_id,display_name,isios15
+          exclude_inputs: bundle_id,display_name,isios15,repo,branch
 
       - name: Install Dependencies
         run: |
@@ -110,7 +120,7 @@ jobs:
         uses: Randomblock1/theos-action@v1
         with:
           theos-src: 'https://github.com/roothide/theos'
-          theos-sdks: 'https://github.com/theos/sdks'
+          theos-sdks: 'https://github.com/Tonwalter888/iOS-SDK-Linux'
             
       - name: Clone headers
         run: |
@@ -136,8 +146,8 @@ jobs:
       - name: Checkout YouMod
         uses: actions/checkout@v7
         with:
-          repository: Tonwalter888/YouMod
-          ref: pre-release
+          repository: ${{ inputs.repo }}
+          ref: ${{ inputs.branch }}
           path: YouMod
 
       - name: Clone things
@@ -150,6 +160,7 @@ jobs:
           git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing
           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouNerdStats
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeLegacy
 
       - name: Build Things
         run: |
@@ -181,6 +192,9 @@ jobs:
           cd ../FLEXHelperForYT
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/fhyt.deb
+          cd ../YouTubeLegacy
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytlgc.deb
           
       - name: Inject Tweaks Into IPA
         run: |
