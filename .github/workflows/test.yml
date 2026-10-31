@@ -127,7 +127,6 @@ jobs:
         uses: Randomblock1/theos-action@v1
         with:
           theos-src: 'https://github.com/roothide/theos'
-          theos-sdks: 'https://github.com/Tonwalter888/iOS-SDK-Linux'
             
       - name: Clone headers
         run: |
