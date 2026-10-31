@@ -168,12 +168,12 @@ jobs:
           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouNerdStats
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT
 
-      - name: Fix Theos od broken pipe issue
-        run: sed -i '' 's/od -c "$i" | head/od -c "$i" 2>\/dev\/null | head/g' $THEOS/bin/convert_xml_plist.sh || true
-
       - name: Clone YouTubeLegacy
         if: ${{ startsWith(env.YT_VERSION, '19') || startsWith(env.YT_VERSION, '20') }}
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeLegacy
+
+      - name: Fix Theos od broken pipe issue
+        run: $THEOS/bin/convert_xml_plist.sh
 
       - name: Build Things
         run: |
