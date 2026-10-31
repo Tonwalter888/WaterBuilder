@@ -1,4 +1,4 @@
-name: YTM (Comming soon, Maybe)
+name: YTM
 on:
   workflow_dispatch:
     inputs:
@@ -18,7 +18,7 @@ concurrency:
   
 jobs:
   build:
-    name: Build IPA with FLEX
+    name: YTM
     runs-on: macos-latest
     permissions:
       contents: write
