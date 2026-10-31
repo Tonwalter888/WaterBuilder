@@ -211,14 +211,7 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/ytlgc.deb
           
       - name: Inject Tweaks Into IPA
-        run: |
-          tweaks=""
-
-          for f in *.deb; do
-            tweaks="$tweaks $f"
-          done
-          
-          cyan -i youtube.ipa -o WaterFLEX_${{ env.YT_VERSION }}_v${{ env.YOUMOD_VERSION }}.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+        run: cyan -i youtube.ipa -o WaterFLEX_${{ env.YT_VERSION }}_v${{ env.YOUMOD_VERSION }}.ipa -uwef *.deb -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
 
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
