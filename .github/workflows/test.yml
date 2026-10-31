@@ -158,9 +158,16 @@ jobs:
           ref: ${{ inputs.branch }}
           path: YouMod
 
-      - name: Clone YouTubeLegacy
-        if: ${{ startsWith(env.YT_VERSION, '19') || startsWith(env.YT_VERSION, '20') }}
-        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeLegacy
+      - name: Clone things
+        run: |
+          git clone --quiet --depth=1 https://github.com/PoomSmart/UncappedAVPlayer
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouGroupSettings
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons
+          git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouNerdStats
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT
 
       - name: Build Things
         run: |
@@ -168,13 +175,30 @@ jobs:
           echo "YOUMOD_VERSION=$(grep '^Version:' control | cut -d ' ' -f2)" >> $GITHUB_ENV
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youmod.deb
-
-      - name: Build YouTubeLegacy
-        if: ${{ startsWith(env.YT_VERSION, '19') || startsWith(env.YT_VERSION, '20') }}
-        run: |
-          cd YouTubeLegacy
+          cd ../UncappedAVPlayer
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytlgc.deb
+          mv packages/*.deb ${{ github.workspace }}/av.deb
+          cd ../YTABConfig
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ab.deb
+          cd ../FLEXing
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
+          mv packages/*.deb ${{ github.workspace }}/flex.deb
+          cd ../YTIcons
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/yticons.deb
+          cd ../YTVideoOverlay
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
+          cd ../YouGroupSettings
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ygs.deb
+          cd ../YouNerdStats
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/yns.deb
+          cd ../FLEXHelperForYT
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/fhyt.deb
           
       - name: Inject Tweaks Into IPA
         run: cyan -i youtube.ipa -o WaterFLEX_${{ env.YT_VERSION }}_v${{ env.YOUMOD_VERSION }}.ipa -uwef *.deb -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
