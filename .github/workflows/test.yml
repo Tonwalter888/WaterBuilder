@@ -43,7 +43,7 @@ concurrency:
 jobs:
   build:
     name: Build YouMod IPA with FLEX
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
 
