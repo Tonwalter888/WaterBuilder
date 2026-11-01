@@ -2,21 +2,17 @@ name: Build YouMod IPA with FLEX
 on:
   workflow_dispatch:
     inputs:
-      ipatype:
-        description: "IPA Type"
-        default: "0"
-        required: true
-        type: choice
-        options:
-          - "0"
-          - "1"
-          - "2"
-
       ipa_url:
-        description: "IPA URL for IPA type 0"
+        description: "IPA URL for newer iOS"
         default: "https://decrypt.whoeevee.com/packages/51wuw255/com.google.ios.youtube-21.43.5.ipa"
         required: true
         type: string
+
+      isios15:
+        description: "Build for iOS 15?"
+        default: false
+        required: false
+        type: boolean
 
       repo:
         description: 'Repository to build from'
@@ -55,7 +51,7 @@ jobs:
       - name: Hide Sensitive Inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: bundle_id,display_name,isios15,repo,branch,ipatype
+          exclude_inputs: bundle_id,display_name,isios15,repo,branch,isios15
 
       - name: Install Dependencies
         run: |
@@ -78,12 +74,9 @@ jobs:
         if: ${{ !startsWith(inputs.ipa_url, 'https://mega.nz/') }}
         env:
           IPA_URL: ${{ inputs.ipa_url }}
-          IPA_TYPE: ${{ inputs.ipatype }}
         run: |
-          if [ $IPA_TYPE == '1' ]; then
+          if [ ${{ inputs.isios15 }} ]; then
             wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --quiet --no-verbose -O youtube.ipa
-          elif [ $IPA_TYPE == '2' ]; then
-            wget "https://archive.org/download/com.google.ios.youtube-19.20.2-Decrypted/com.google.ios.youtube-19.20.2-Decrypted.ipa" --quiet --no-verbose -O youtube.ipa
           else 
             wget "$IPA_URL" --quiet --no-verbose -O youtube.ipa
           fi
@@ -129,6 +122,8 @@ jobs:
         uses: Randomblock1/theos-action@v1
         with:
           theos-src: 'https://github.com/roothide/theos'
+          theos-sdks: 'https://github.com/Tonwalter888/iOS-16.5-SDK'
+          theos-sdks-branch: 'main'
             
       - name: Clone headers
         run: |
@@ -137,7 +132,6 @@ jobs:
           else
             cd $THEOS/include/YouTubeHeader
             git pull --quiet --force
-            cd ${{ github.workspace }}
           fi
           
           if [ ! -d "$THEOS/include/PSHeader" ]; then
@@ -145,7 +139,6 @@ jobs:
           else
             cd $THEOS/include/PSHeader
             git pull --quiet --force
-            cd ${{ github.workspace }}
           fi
 
       - name: Install cyan
