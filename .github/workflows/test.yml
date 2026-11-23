@@ -59,6 +59,7 @@ jobs:
           brew install make ldid gnu-sed autoconf automake libtool pkg-config
           echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV
+          sudo apt install libplist-utils -y
           
       - name: Install MEGA downloader
         if: ${{ startsWith(inputs.ipa_url, 'https://mega.nz/') }}
