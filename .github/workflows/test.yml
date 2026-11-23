@@ -140,6 +140,9 @@ jobs:
       - name: Install cyan
         run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
 
+      - name: Fix Theos od broken pipe issue
+        run: sed -i 's/od -c "$i" | head/od -c "$i" 2>\/dev\/null | head/g' "$THEOS/bin/convert_xml_plist.sh"
+
       - name: Checkout YouMod
         uses: actions/checkout@v7
         with:
