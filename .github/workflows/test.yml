@@ -4,7 +4,7 @@ on:
     inputs:
       ipa_url:
         description: "IPA URL for newer iOS"
-        default: "https://decrypt.whoeevee.com/packages/hhkj4ipf/com.google.ios.youtube-21.46.3.ipa"
+        default: "https://decrypt.whoeevee.com/packages/gh5f5dpn/com.google.ios.youtube-21.47.6.ipa"
         required: true
         type: string
 
@@ -55,11 +55,10 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          echo "/home/linuxbrew/.linuxbrew/bin" >> $GITHUB_PATH
           brew install make ldid gnu-sed autoconf automake libtool pkg-config
           echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV
-          sudo apt install libplist-utils -y
           
       - name: Install MEGA downloader
         if: ${{ startsWith(inputs.ipa_url, 'https://mega.nz/') }}
